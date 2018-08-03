@@ -1,5 +1,4 @@
-﻿using Sitecore;
-using Sitecore.Diagnostics;
+﻿using Sitecore.Diagnostics;
 using Sitecore.Jobs;
 using Sitecore.Security.Accounts;
 using Sitecore.WFFM.Abstractions.Analytics;
@@ -11,7 +10,7 @@ using System;
 using System.Linq;
 using System.Xml;
 
-namespace Sitecore.WFFM.Services.Pipelines.ExportToExcel
+namespace Sitecore.Support.WFFM.Services.Pipelines.ExportToExcel
 {
   public class ExportFormDataToExcel
   {
@@ -19,6 +18,11 @@ namespace Sitecore.WFFM.Services.Pipelines.ExportToExcel
     {
       Job job = Context.Job;
       job?.Status.LogInfo(DependenciesManager.ResourceManager.Localize("EXPORTING_DATA"));
+
+      // Begin of Sitecore.Support.67687
+      SetDateFormat.Process(args);
+      // End of Sitecore.Support.67687
+
       string text = args.Parameters["contextUser"];
       Assert.IsNotNullOrEmpty(text, "contextUser");
       using (new UserSwitcher(text, true))

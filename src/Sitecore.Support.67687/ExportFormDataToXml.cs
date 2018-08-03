@@ -1,5 +1,4 @@
-﻿using Sitecore;
-using Sitecore.Diagnostics;
+﻿using Sitecore.Diagnostics;
 using Sitecore.Jobs;
 using Sitecore.Security.Accounts;
 using Sitecore.Text;
@@ -8,7 +7,7 @@ using Sitecore.WFFM.Services.Pipelines;
 using System.Text.RegularExpressions;
 using System.Xml;
 
-namespace Sitecore.WFFM.Services.Pipelines.ExportToXml
+namespace Sitecore.Support.WFFM.Services.Pipelines.ExportToXml
 {
   public class ExportFormDataToXml
   {
@@ -16,6 +15,11 @@ namespace Sitecore.WFFM.Services.Pipelines.ExportToXml
     {
       Job job = Context.Job;
       job?.Status.LogInfo(DependenciesManager.ResourceManager.Localize("EXPORTING_DATA"));
+
+      // Begin of Sitecore.Support.67687
+      SetDateFormat.Process(args);
+      // End of Sitecore.Support.67687
+
       XmlDocument xmlDocument = new XmlDocument();
       xmlDocument.InnerXml = args.Packet.ToXml();
       string text = args.Parameters["contextUser"];
