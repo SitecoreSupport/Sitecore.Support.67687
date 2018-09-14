@@ -11,7 +11,7 @@ using Sitecore.WFFM.Speak.ViewModel;
 using System.Linq;
 using System.Xml;
 
-namespace Sitecore.WFFM.Services.Pipelines.ExportToExcel.ExportFormDataToExcel
+namespace Sitecore.Support.WFFM.Services.Pipelines.ExportToExcel.ExportFormDataToExcel
 {
   public class ExportFormDataToExcel
   {
@@ -19,6 +19,9 @@ namespace Sitecore.WFFM.Services.Pipelines.ExportToExcel.ExportFormDataToExcel
     {
       Job job = Context.Job;
       job?.Status.LogInfo(ResourceManager.Localize("EXPORTING_DATA"));
+      // Begin of Sitecore.Support.67687
+      SetDateFormat.Process(args);
+      // End of Sitecore.Support.67687
       string text = args.Parameters["contextUser"];
       Assert.IsNotNullOrEmpty(text, "contextUser");
       using (new UserSwitcher(text, true))

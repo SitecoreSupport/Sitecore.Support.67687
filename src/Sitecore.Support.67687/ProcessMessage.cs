@@ -12,7 +12,7 @@ using System;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
 
-namespace Sitecore.Form.Core.Pipelines.ProcessMessage.ProcessMessage
+namespace Sitecore.Support.Form.Core.Pipelines.ProcessMessage
 {
   public class ProcessMessage
   {
@@ -38,6 +38,14 @@ namespace Sitecore.Form.Core.Pipelines.ProcessMessage.ProcessMessage
         FieldItem fieldItem = new FieldItem(StaticSettings.ContextDatabase.GetItem(field.FieldID));
         string value = field.Value;
         value = FieldReflectionUtil.GetAdaptedValue(fieldItem, value);
+        // Begin of Sitecore.Support.67687
+        if (Sitecore.Form.Core.Utility.DateUtil.IsIsoDateTime(field.Value)
+            && (fieldItem["Field Link"] == "{09BF916E-79FB-4AE3-B799-659E63C75EA5}"
+            || fieldItem["Field Link"] == "{95DD3FCF-2E03-4064-9968-614D1452F20B}"))
+        {
+          value = Sitecore.Form.Core.Utility.DateUtil.IsoDateTimeToDateTime(field.Value).ToString(Sitecore.Configuration.Settings.GetSetting("WFM.MessageDateFormat", "dd-MMM-yyyy"));
+        }
+        // End of Sitecore.Support.67687
         value = Regex.Replace(value, "src=\"/sitecore/shell/themes/standard/~", SrcReplacer);
         value = Regex.Replace(value, "href=\"/sitecore/shell/themes/standard/~", HrefReplacer);
         value = Regex.Replace(value, "on\\w*=\".*?\"", string.Empty);
@@ -58,7 +66,8 @@ namespace Sitecore.Form.Core.Pipelines.ProcessMessage.ProcessMessage
         args.From = args.From.Replace("[" + fieldItem.ID + "]", field.Value);
         args.To.Replace(string.Join(string.Empty, "[", fieldItem.ID.ToString(), "]"), field.Value);
         args.CC.Replace(string.Join(string.Empty, "[", fieldItem.ID.ToString(), "]"), field.Value);
-        args.Subject.Replace(string.Join(string.Empty, "[", fieldItem.ID.ToString(), "]"), field.Value);
+        //args.Subject.Replace(string.Join(string.Empty, "[", fieldItem.ID.ToString(), "]"), field.Value);
+        args.Subject.Replace(string.Join(string.Empty, "[", fieldItem.ID.ToString(), "]"), value);
         args.From = args.From.Replace("[" + fieldItem.FieldDisplayName + "]", field.Value);
         args.To.Replace(string.Join(string.Empty, "[", fieldItem.FieldDisplayName, "]"), field.Value);
         args.CC.Replace(string.Join(string.Empty, "[", fieldItem.FieldDisplayName, "]"), field.Value);
@@ -66,7 +75,8 @@ namespace Sitecore.Form.Core.Pipelines.ProcessMessage.ProcessMessage
         args.From = args.From.Replace("[" + field.FieldName + "]", field.Value);
         args.To.Replace(string.Join(string.Empty, "[", field.FieldName, "]"), field.Value);
         args.CC.Replace(string.Join(string.Empty, "[", field.FieldName, "]"), field.Value);
-        args.Subject.Replace(string.Join(string.Empty, "[", field.FieldName, "]"), field.Value);
+        //args.Subject.Replace(string.Join(string.Empty, "[", field.FieldName, "]"), field.Value);
+        args.Subject.Replace(string.Join(string.Empty, "[", field.FieldName, "]"), value);
       }
     }
 

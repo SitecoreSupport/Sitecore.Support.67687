@@ -9,7 +9,7 @@ using Sitecore.WFFM.Services.Pipelines;
 using System.Text.RegularExpressions;
 using System.Xml;
 
-namespace Sitecore.WFFM.Services.Pipelines.ExportToXml.ExportFormDataToXml
+namespace Sitecore.Support.WFFM.Services.Pipelines.ExportToXml.ExportFormDataToXml
 {
   public class ExportFormDataToXml
   {
@@ -17,6 +17,9 @@ namespace Sitecore.WFFM.Services.Pipelines.ExportToXml.ExportFormDataToXml
     {
       Job job = Context.Job;
       job?.Status.LogInfo(ResourceManager.Localize("EXPORTING_DATA"));
+      // Begin of Sitecore.Support.67687
+      SetDateFormat.Process(args);
+      // End of Sitecore.Support.67687
       XmlDocument xmlDocument = new XmlDocument();
       xmlDocument.InnerXml = args.Packet.ToXml();
       string text = args.Parameters["contextUser"];

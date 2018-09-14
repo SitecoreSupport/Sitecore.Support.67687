@@ -73,6 +73,7 @@
     <Compile Include="ExportFormDataToXml.cs" />
     <Compile Include="ProcessMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SetDateFormat.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Config\Include\zzz\Sitecore.Support.67687.config" />
